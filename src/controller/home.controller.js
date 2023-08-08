@@ -42,7 +42,7 @@ const getUsers = async (req, res) => {
     const result = await homeService.getUsers();
    return res.json({ users: result });
   } catch (error) {
-   return res.json({ error: error.message });
+   return res.status(500).send({ error: error.message });
   }
 };
 
@@ -55,8 +55,8 @@ try{  const userId = +req.query.userId;
 
   let [rows, fields] = await db.execute(
     `SELECT name, AES_DECRYPT(number,'key') AS decryptedNumber FROM contacts 
-    WHERE userId = ?`,
-    [userId]
+    WHERE userId = ?  AND name LIKE ?`,
+    [userId,`%${searchText}%`]
   );
   let decryptedNumber = rows.length > 0 ? rows[0].decryptedNumber.toString() : null;
 
@@ -79,7 +79,7 @@ rows= rows.splice(0,pageSize)
     totalCount,
     rows
   }
-  return res.status(200).send({status:true,messaage:response});
+  return res.status(200).send(response);
 }
 catch (err){
  return res.status(500).send({status:false,message:err.message})

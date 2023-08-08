@@ -33,14 +33,11 @@ const createData = async (body) => {
      return affectedRows;
  }
  
-const getUsers = async (userId) => {
-     const sql = `SELECT * FROM users WHERE userId = ?`;
-     const [result] = await db.query(sql, [userId]);
+const getUsers = async () => {
+     const sql = `SELECT * FROM users`;
+     const [result] = await db.query(sql);
      return result;
 };
-
-
-
 
 module.exports = {
      createUser,
